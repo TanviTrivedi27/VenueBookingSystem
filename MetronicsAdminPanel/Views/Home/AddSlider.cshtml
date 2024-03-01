@@ -1,0 +1,53 @@
+﻿@model MetronicsAdminPanel.Models.Sliders
+
+@{
+    ViewData["Title"] = "AddSlider";
+}
+
+<h1>AddSlider</h1>
+
+<h4>Slider</h4>
+<hr />
+<div class="row" ml-3>
+    <div class="col-md-4 ml-3">
+        <form asp-action="AddSlider">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ImgPath" class="control-label"></label>
+                <input asp-for="ImgPath" class="form-control" />
+                <span asp-validation-for="ImgPath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BtnTitle" class="control-label"></label>
+                <input asp-for="BtnTitle" class="form-control" />
+                <span asp-validation-for="BtnTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BtnRedirectUrl" class="control-label"></label>
+                <input asp-for="BtnRedirectUrl" class="form-control" />
+                <span asp-validation-for="BtnRedirectUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

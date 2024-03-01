@@ -1,0 +1,224 @@
+﻿@{
+   ViewData["Title"] = "Sliders";
+ }
+    @* <input type="hidden" id="sliderData" value="@Html.Raw(Json.Serialize(Model))" /> *@
+<div class="card card-docs flex-row-fluid mb-2" id="kt_docs_content_card">
+<div class="card-body fs-6 py-15 px-10 py-lg-15 px-lg-15 text-gray-700">
+    <div class="py-5">
+            <div id="kt_datatable_example_1_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer" style="padding: 20px;">
+        <div class="table-responsive">
+
+    <!--begin::Wrapper-->
+        <div class="d-flex flex-stack mb-5">
+        <!--begin::Search-->
+            <div class="d-flex align-items-center position-relative my-1 mb-2 mb-md-0">
+            <i class="ki-duotone ki-magnifier fs-1 position-absolute ms-6">
+                <span class="path1"></span>
+                <span class="path2"></span>
+            </i>
+            <input type="text" data-kt-docs-table-filter="search" class="form-control form-control-solid w-250px ps-15" placeholder="Search Customers" />
+            </div>
+        <!--end::Search-->
+        <!--begin::Toolbar-->
+            <div class="d-flex justify-content-end" data-kt-docs-table-toolbar="base">
+            <!--begin::Filter-->
+           
+            <!--end::Filter-->
+            <!--begin::Add customer-->
+            <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" title="Coming Soon">
+                <i class="ki-duotone ki-plus fs-2"></i>
+                Add Customer
+            </button>
+            <!--end::Add customer-->
+            </div>
+        <!--end::Toolbar-->
+        <!--begin::Group actions-->
+            <div class="d-flex justify-content-end align-items-center d-none" data-kt-docs-table-toolbar="selected">
+                <div class="fw-bold me-5">
+                <span class="me-2" data-kt-docs-table-select="selected_count"></span> Selected
+                </div>
+
+                <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" title="Coming Soon">
+                Selection Action
+                </button>
+            </div>
+        <!--end::Group actions-->
+        </div>
+    <!--end::Wrapper-->
+    <!--begin::Datatable-->
+        <table id="kt_datatable_example_1" class="table align-middle table-row-dashed fs-6 gy-5">
+        <thead>
+        <tr class ="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0">
+                <th class="w-10px pe-2">
+                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                        <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                    </div>
+                </th>
+                <th>SliderId</th>
+                <th>ImgPath</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>BtnTitle</th>
+                <th>BtnRedirectUrl</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    <tbody class="text-gray-600 fw-semibold">
+        </tbody>
+    </table>
+    <!--end::Datatable-->
+    @section scripts {
+   
+        <script>
+            $(document).ready(function () {
+                //DataTable initialization
+                var dt = $('#kt_datatable_example_1').DataTable({
+                    searchDelay: 500,
+                    processing: true,
+                    serverSide: true,
+                    stateSave: true,
+                    searching: true,
+                    select: {
+                        style: 'multi',
+                        selector: 'td:first-child input[type="checkbox"]',
+                        className: 'row-selected'
+                    },
+                    ajax: {
+                        url: '/Home/GetSliderList',
+                        type: 'POST',
+                        DataType: 'json',
+                        // error:function(err){
+                        //     console.error(err);
+                        // // }
+                        data: function (d) {
+                        // Pass the search value from the search input field to the server
+                         d.searchValue = $('[data-kt-docs-table-filter="search"]').val();
+                          // Pass sorting information
+                         d.sortColumn = $('th.sorting_asc, th.sorting_desc').text().trim();
+                         d.sortDirection = $('th.sorting_asc').length ? 'asc' : 'desc';
+                        }
+
+                    },
+                    order: [], // Add this line to disable initial sorting
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            orderable: false,
+                            render: function (data) {
+                                return `
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="checkbox" value="${data}" />
+                                            </div>`;
+                            }
+                        },
+                        {
+                            targets: 2,
+                            render: function (data, type, row) {
+                                return `<img src="https://localhost:7126/${data}" class="w-35px me-3" alt="${data}">`;
+                            }
+                        },
+                        {
+                            targets: -1,
+                            data: null,
+                            orderable: false,
+                            className: 'text-end',
+                            render: function (data, type, row) {
+                            // return `<div class="dropdown">
+                            //     <button class="btn btn-light btn-active-light-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            //        Actions
+                            //     </button>
+                            //     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            //          <li><a class="dropdown-item" href="#" data-kt-docs-table-filter="edit_row">Edit</a></li>
+                            //          <li><a class="dropdown-item" href="#" data-kt-docs-table-filter="delete_row">Delete</a></li>
+                            //     </ul>
+                            // </div>`;
+                             return `<a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">
+                                Actions
+                                <span class="svg-icon fs-5 m-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                                            <path d="M6.70710678,15.7071068 C6.31658249,16.0976311 5.68341751,16.0976311 5.29289322,15.7071068 C4.90236893,15.3165825 4.90236893,14.6834175 5.29289322,14.2928932 L11.2928932,8.29289322 C11.6714722,7.91431428 12.2810586,7.90106866 12.6757246,8.26284586 L18.6757246,13.7628459 C19.0828436,14.1360383 19.1103465,14.7686056 18.7371541,15.1757246 C18.3639617,15.5828436 17.7313944,15.6103465 17.3242754,15.2371541 L12.0300757,10.3841378 L6.70710678,15.7071068 Z" fill="currentColor" fill-rule="nonzero" transform="translate(12.000003, 11.999999) rotate(-180.000000) translate(-12.000003, -11.999999)"></path>
+                                        </g>
+                                    </svg>
+                                </span>
+                            </a>
+                            <!--begin::Menu-->
+                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
+                                        Edit
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+
+                                <!--begin::Menu item-->
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="delete_row">
+                                        Delete
+                                    </a>
+                                </div>
+                                <!--end::Menu item-->
+                            </div>
+                            <!--end::Menu-->`;
+                             },
+                         },
+
+                    ],
+                    columns: [
+                        { data: null, name: null },
+                        { data: 'sliderId', name: 'sliderId', searchable: true },
+                        { data: 'imgPath', name: 'imgPath', searchable: true },
+                        { data: 'title', name: 'title', searchable: true },
+                        { data: 'description', name: 'description', searchable: true },
+                        { data: 'btnTitle', name: 'btnTitle', searchable: true },
+                        { data: 'btnRedirectUrl', name: 'btnRedirectUrl', searchable: true },
+                        { data: null, name: null },
+
+                    ],
+                    // createdRow: function (row, data, dataIndex) {
+                    //     $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
+                    // }
+
+                });
+                // Function to handle search functionality
+                $('[data-kt-docs-table-filter="search"]').on('keyup', function () {
+                    dt.search($(this).val()).draw();
+                });
+
+                // Handle Edit and Delete Rows
+                $('#kt_datatable_example_1').on('click', '[data-kt-docs-table-filter="edit_row"]', function (e) {
+                    e.preventDefault();
+                    // Get the slider ID from the row
+                 var sliderId = dt.row($(this).closest('tr')).data().sliderId;
+                  // Perform edit action here (e.g., redirect to edit page with sliderId parameter)
+                 console.log('Edit slider with ID:', sliderId);
+                });
+
+                $('#kt_datatable_example_1').on('click', '[data-kt-docs-table-filter="delete_row"]', function (e) {
+                    e.preventDefault();
+                // Get the slider ID from the row
+                var sliderId = dt.row($(this).closest('tr')).data().sliderId;
+                // Perform delete action here (e.g., show confirmation modal)
+                  console.log('Delete slider with ID:', sliderId);
+                // Example: showConfirmationModal(sliderId);
+              });
+                // Add your filter functionality here
+
+                // Handle Delete Rows
+                // Add your delete rows functionality here
+
+                // Reset Form
+                // Add your reset form functionality here
+
+                // Toggle Toolbars
+                // Add your toolbar toggling functionality here
+            });
+    </script>
+    }
+        </div>
+    </div>
+</div>
+    </div>
+</div>
